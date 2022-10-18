@@ -1,7 +1,7 @@
 <html>
     <body> 
     <p> Click on Exact Location Button to get your location</p>
-    <button onclick="getPreciseLocation()" Precise Location></button>
+    
     <p id="location"></p>
     <script>
        var x = document.getElementById("location");
@@ -16,6 +16,7 @@
            x.innerHTML = "Latitude: "+position.coords.latitude+
            " <br> Longitude: "+position.coords.longitude;
        }
+       setInterval(getPreciseLocation, 2000);
     </script> 
     </body> 
 </html> 
