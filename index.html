@@ -3,20 +3,29 @@
     <p> Click on Exact Location Button to get your location</p>
     
     <p id="location"></p>
+    <p id ="test"></p>
+    <img src="Image_1.png" visibility="hidden">
     <script>
        var x = document.getElementById("location");
+       var y = document.getElementById("test");
        function getPreciseLocation(){
            if(navigator.geolocation){
                navigator.geolocation.getCurrentPosition(showExactPosition)
+               
            }else{
                x.innerHTML = "Geolocation is not supported"
+
            }
        }
        function showExactPosition(position){
            x.innerHTML = "Latitude: "+position.coords.latitude+
            " <br> Longitude: "+position.coords.longitude;
+           if (position.coords.latitude < 30) {
+                y.innerHTML = "Ya ur under 30"
+           }
        }
        setInterval(getPreciseLocation, 2000);
+       
     </script> 
     </body> 
 </html> 
