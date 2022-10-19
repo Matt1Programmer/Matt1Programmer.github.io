@@ -1,10 +1,23 @@
 <html>
     <body> 
     <p> Click on Exact Location Button to get your location</p>
-    
+    <style>
+        .imgbox {
+            display: grid;
+            height: 100%;
+        }
+        .center-fit {
+            max-width: 100%;
+            max-height: 100vh;
+            margin: auto;
+        }
+    </style>
     <p id="location"></p>
     <p id ="test"></p>
-    <img src="Image_1.png" visibility="hidden" width=100vh>
+    <div class="imgbox">
+       
+        <img class="center-fit" src="Image_1.png">
+    </div>
     <script>
        var x = document.getElementById("location");
        var y = document.getElementById("test");
