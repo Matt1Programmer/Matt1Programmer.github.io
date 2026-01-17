@@ -44,6 +44,24 @@
 .leaflet-control-attribution {
     display: none !important;
 }
+
+/* Fullscreen map mode */
+.fullscreen-map {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    border-radius: 0 !important;
+}
+
+/* Hide everything else when fullscreen */
+body.fullscreen-active > div:not(#mapFullscreenWrapper) {
+    display: none;
+}
+
+/* Make map fill screen minus info bar */
+.fullscreen-map #map {
+    height: calc(100vh - 64px);
+}
     </style>
 </head>
 <body class="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 text-white overflow-y-auto">   
@@ -138,8 +156,10 @@
                 <div id="errorMessage" class="hidden mt-4 bg-red-900/50 border border-red-500 rounded p-3 text-sm"></div>
             </div>
 
-            <!-- Map Display -->
-            <div class="bg-slate-800/50 backdrop-blur rounded-lg overflow-hidden border border-blue-500/30">
+            <!-- Map Display →
+<div id="mapFullscreenWrapper"
+    	 class="bg-slate-800/50 backdrop-blur rounded-lg overflow-hidden border border-blue-500/30 relative">
+
                 <!-- Info Bar -->
                 <div class="info-bar px-6 py-3">
                     <div class="grid grid-cols-4 gap-4 text-center">
@@ -160,6 +180,11 @@
                             <div class="text-lg font-mono text-white" id="eta">--:--</div>
                         </div>
                     </div>
+		<button
+  onclick="toggleFullscreenMap()"
+  class="absolute right-4 top-3 bg-black/40 hover:bg-black/60 px-3 py-1 rounded text-xs font-semibold border border-cyan-400">
+  FULLSCREEN
+</button>
                 </div>
                 
                 <!-- Map Container -->
@@ -260,7 +285,23 @@
         let flights = [];
         let activeFlight = null;
 
-        // Initialize map
+       function toggleFullscreenMap() {
+    const wrapper = document.getElementById('mapFullscreenWrapper');
+    const body = document.body;
+
+    wrapper.classList.toggle('fullscreen-map');
+    body.classList.toggle('fullscreen-active');
+
+    // Leaflet needs this after resize
+    setTimeout(() => {
+        if (map) {
+            map.invalidateSize();
+        }
+    }, 200);
+}
+
+
+ // Initialize map
         function initMap(lat, lng) {
             if (!map) {
                 map = L.map('map', {
