@@ -1,8 +1,11 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Bike Airways">
     <title>Bike Airways - Flight Tracker</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
@@ -31,10 +34,20 @@
             background: rgba(34, 211, 238, 0.2);
             border-left: 4px solid #22d3ee;
         }
+        html, body {
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: touch;
+    height: 100%;
+    position: fixed;
+    width: 100%;
+}
+.leaflet-control-attribution {
+    display: none !important;
+}
     </style>
 </head>
-<body class="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 text-white">
-    <div class="max-w-4xl mx-auto p-4">
+<body class="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 text-white overflow-y-auto">   
+ <div class="max-w-4xl mx-auto p-4">
         <!-- Header -->
         <div class="text-center mb-8 pt-6 relative">
             <div class="flex items-center justify-center gap-3 mb-2">
@@ -53,7 +66,6 @@
             </button>
         </div>
 
-
         <!-- Flight List View -->
         <div id="flightListView" class="bg-slate-800/50 backdrop-blur rounded-lg p-6 mb-6 border border-blue-500/30">
             <div class="flex items-center justify-between mb-4">
@@ -67,7 +79,6 @@
             </div>
         </div>
 
-
         <!-- Flight Board Display -->
         <div id="flightTracker" class="hidden">
             <div class="bg-slate-800/50 backdrop-blur rounded-lg p-6 mb-6 border border-blue-500/30">
@@ -76,7 +87,6 @@
                         <div class="text-sm text-blue-300">FLIGHT <span id="flightNumber">BA1234</span></div>
                         <div class="text-2xl font-bold" id="statusDisplay">SCHEDULED</div>
                     </div>
-
 
                     <div class="flex items-center justify-between mb-6">
                         <div class="flex-1">
@@ -96,7 +106,6 @@
                         </div>
                     </div>
 
-
                     <div class="grid grid-cols-3 gap-4 pt-4 border-t border-blue-500/30">
                         <div class="text-center">
                             <div class="text-xs text-blue-300 mb-1">DISTANCE</div>
@@ -113,7 +122,6 @@
                     </div>
                 </div>
 
-
                 <!-- Control Buttons -->
                 <div class="flex gap-3">
                     <button onclick="startTracking()" id="takeoffBtn" class="flex-1 bg-green-600 hover:bg-green-700 py-3 rounded font-semibold transition">
@@ -127,10 +135,8 @@
                     </button>
                 </div>
 
-
                 <div id="errorMessage" class="hidden mt-4 bg-red-900/50 border border-red-500 rounded p-3 text-sm"></div>
             </div>
-
 
             <!-- Map Display -->
             <div class="bg-slate-800/50 backdrop-blur rounded-lg overflow-hidden border border-blue-500/30">
@@ -183,7 +189,6 @@
         </div>
     </div>
 
-
     <!-- Settings Modal -->
     <div id="settingsModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur flex items-center justify-center p-4 z-50">
         <div class="bg-slate-800 rounded-lg p-6 max-w-md w-full border border-blue-500/30 max-h-[90vh] overflow-y-auto">
@@ -196,43 +201,36 @@
                 </button>
             </div>
 
-
             <div class="space-y-4">
                 <div>
                     <label class="block text-sm text-blue-300 mb-2">FLIGHT NUMBER</label>
                     <input type="text" id="editFlightNumber" class="w-full bg-slate-700/50 border border-blue-500/30 rounded px-3 py-2 text-white">
                 </div>
 
-
                 <div>
                     <label class="block text-sm text-blue-300 mb-2">DEPARTURE LOCATION</label>
                     <input type="text" id="editDepartureLocation" class="w-full bg-slate-700/50 border border-blue-500/30 rounded px-3 py-2 mb-2 text-white">
                 </div>
-
 
                 <div>
                     <label class="block text-sm text-blue-300 mb-2">ARRIVAL LOCATION</label>
                     <input type="text" id="editArrivalLocation" class="w-full bg-slate-700/50 border border-blue-500/30 rounded px-3 py-2 mb-2 text-white">
                 </div>
 
-
                 <div>
                     <label class="block text-sm text-blue-300 mb-2">SCHEDULED DEPARTURE</label>
                     <input type="datetime-local" id="editDepartureTime" class="w-full bg-slate-700/50 border border-blue-500/30 rounded px-3 py-2 text-white">
                 </div>
-
 
                 <div>
                     <label class="block text-sm text-blue-300 mb-2">BOARDING TIME</label>
                     <input type="datetime-local" id="editBoardingTime" class="w-full bg-slate-700/50 border border-blue-500/30 rounded px-3 py-2 text-white">
                 </div>
 
-
                 <div>
                     <label class="block text-sm text-blue-300 mb-2">SCHEDULED ARRIVAL</label>
                     <input type="datetime-local" id="editArrivalTime" class="w-full bg-slate-700/50 border border-blue-500/30 rounded px-3 py-2 text-white">
                 </div>
-
 
                 <button onclick="saveFlight()" class="w-full bg-blue-600 hover:bg-blue-700 py-3 rounded font-semibold transition">
                     SAVE FLIGHT
@@ -240,7 +238,6 @@
             </div>
         </div>
     </div>
-
 
     <script>
         let tracking = false;
@@ -257,10 +254,11 @@
         let lastPosition = null;
         let zoomInterval = null;
         let infoBarInterval = null;
+        let currentHeading = 0;
+        let totalDistance = 0;
         
         let flights = [];
         let activeFlight = null;
-
 
         // Initialize map
         function initMap(lat, lng) {
@@ -271,7 +269,8 @@
                     doubleClickZoom: false,
                     boxZoom: false,
                     dragging: false,
-                    touchZoom: false
+                    touchZoom: false,
+	        attributionControl: false  // ADD THIS LINE
                 }).setView([lat, lng], zoomLevels[currentZoomIndex]);
                 
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -279,24 +278,21 @@
                     maxZoom: 19
                 }).addTo(map);
 
-
                 const planeIcon = L.divIcon({
                     className: 'custom-plane-icon',
-                    html: `<div style="position: relative; width: 40px; height: 40px;">
-                             <svg style="position: absolute; width: 40px; height: 40px; top: 0px; left: 0px; filter: drop-shadow(0 3px 6px rgba(0,0,0,0.8));" fill="white" viewBox="0 0 24 24">
-                               <path d="M21,16v-2l-8-5V3.5c0-0.83-0.67-1.5-1.5-1.5S10,2.67,10,3.5V9l-8,5v2l8-2.5V19l-2,1.5V22l3.5-1l3.5,1v-1.5L13,19v-5.5 L21,16z"/>
-                             </svg>
-                           </div>`,
+                    html: `<div id="planeMarker" style="position: relative; width: 40px; height: 40px; transform: rotate(0deg); transition: transform 0.3s ease;">
+         <svg style="position: absolute; width: 40px; height: 40px; top: 0px; left: 0px; filter: drop-shadow(0 3px 6px rgba(0,0,0,0.8));" fill="white" viewBox="0 0 24 24">
+           <path d="M21,16v-2l-8-5V3.5c0-0.83-0.67-1.5-1.5-1.5S10,2.67,10,3.5V9l-8,5v2l8-2.5V19l-2,1.5V22l3.5-1l3.5,1v-1.5L13,19v-5.5 L21,16z"/>
+         </svg>
+       </div>`,
                     iconSize: [40, 40],
                     iconAnchor: [20, 20]
                 });
-
 
                 marker = L.marker([lat, lng], { icon: planeIcon }).addTo(map);
                 routeLine = L.polyline([], { color: '#540000', weight: 6, opacity: 0.8 }).addTo(map);
             }
         }
-
 
         function cycleZoom() {
             currentZoomIndex = (currentZoomIndex + 1) % zoomLevels.length;
@@ -307,7 +303,6 @@
                 document.getElementById('zoomLevel').textContent = 'ZOOM: ' + zoomNames[currentZoomIndex];
             }
         }
-
 
         function updateDisplay() {
             if (!activeFlight) return;
@@ -323,13 +318,11 @@
             statusEl.className = 'text-2xl font-bold ' + getStatusColor();
         }
 
-
         function formatTime(timeStr) {
             if (!timeStr) return '--:--';
             const date = new Date(timeStr);
             return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
         }
-
 
         function getStatusColor() {
             const colors = {
@@ -340,7 +333,6 @@
             };
             return colors[currentStatus] || 'text-blue-400';
         }
-
 
         function getCurrentStatus(flight) {
             const now = new Date();
@@ -353,13 +345,23 @@
             if (boarding && now >= boarding) return 'boarding';
             return 'scheduled';
         }
-
+        function calculateDistance(lat1, lon1, lat2, lon2) {
+    const R = 3959; // Radius of Earth in miles
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+              Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+              Math.sin(dLon/2) * Math.sin(dLon/2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    return R * c;
+}
 
         function startTracking() {
             if ('geolocation' in navigator) {
                 tracking = true;
                 currentStatus = 'airborne';
                 route = [];
+	    totalDistance = 0;  // ADD THIS LINE
                 departureTime = Date.now();
                 updateDisplay();
                 
@@ -370,13 +372,11 @@
                 document.getElementById('positionInfo').classList.remove('hidden');
                 document.getElementById('zoomIndicator').classList.remove('hidden');
 
-
                 // Start zoom cycling every 10 seconds
                 zoomInterval = setInterval(cycleZoom, 10000);
                 
                 // Start updating info bar every second
                 infoBarInterval = setInterval(updateInfoBar, 1000);
-
 
                 navigator.geolocation.getCurrentPosition(
                     (position) => {
@@ -396,25 +396,40 @@
                             `${initialPos.lat.toFixed(6)}°N, ${initialPos.lng.toFixed(6)}°E`;
                         
                         watchId = navigator.geolocation.watchPosition(
-                            (position) => {
-                                const pos = {
-                                    lat: position.coords.latitude,
-                                    lng: position.coords.longitude,
-                                    speed: position.coords.speed || 0
-                                };
-                                route.push(pos);
-                                updateMap(pos);
-                                updateStats(pos);
-                                
-                                // Update coordinates display
-                                document.getElementById('coordinates').textContent = 
-                                    `${pos.lat.toFixed(6)}°N, ${pos.lng.toFixed(6)}°E`;
-                            },
-                            (error) => {
-                                console.warn('Position update error:', error);
-                            },
-                            { enableHighAccuracy: true, maximumAge: 10000, timeout: 30000 }
-                        );
+    (position) => {
+        const pos = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+            speed: position.coords.speed || 0
+        };
+        
+        // Only add waypoint if moved more than 20 meters from last position
+        if (route.length > 0) {
+            const lastPos = route[route.length - 1];
+            const distMoved = calculateDistance(lastPos.lat, lastPos.lng, pos.lat, pos.lng) * 1609.34; // to meters
+            
+            if (distMoved > 20) {
+                totalDistance += calculateDistance(lastPos.lat, lastPos.lng, pos.lat, pos.lng);
+                route.push(pos);
+                updateMap(pos);
+                updateStats(pos);
+            } else {
+                // Update current position for live display even if not adding waypoint
+                lastPosition = pos;
+                if (marker) {
+                    marker.setLatLng([pos.lat, pos.lng]);
+                }
+            }
+        }
+        
+        document.getElementById('coordinates').textContent = 
+            `${pos.lat.toFixed(6)}°N, ${pos.lng.toFixed(6)}°E`;
+    },
+    (error) => {
+        console.warn('Position update error:', error);
+    },
+    { enableHighAccuracy: true, maximumAge: 10000, timeout: 30000 }
+);
                     },
                     (error) => {
                         showError('Could not get location: ' + error.message + '. Please ensure location is enabled.');
@@ -426,7 +441,6 @@
                 showError('Geolocation is not supported by your browser');
             }
         }
-
 
         function stopTracking() {
             tracking = false;
@@ -452,7 +466,6 @@
             document.getElementById('landBtn').disabled = true;
         }
 
-
         function backToList() {
             stopTracking();
             route = [];
@@ -460,6 +473,7 @@
             departureTime = null;
             lastPosition = null;
             currentZoomIndex = 0;
+	totalDistance = 0;  // ADD THIS LINE
             
             if (map) {
                 map.remove();
@@ -473,20 +487,31 @@
             renderFlightList();
         }
 
-
         function updateMap(pos) {
-            lastPosition = pos;
+    lastPosition = pos;
+    
+    if (marker && map) {
+        marker.setLatLng([pos.lat, pos.lng]);
+        
+        // Calculate and update heading
+        if (route.length >= 2) {
+            const prevPos = route[route.length - 2];
+            currentHeading = calculateBearing(prevPos, pos);
             
-            if (marker && map) {
-                marker.setLatLng([pos.lat, pos.lng]);
-                const routeCoords = route.map(p => [p.lat, p.lng]);
-                routeLine.setLatLngs(routeCoords);
-                map.setView([lastPosition.lat, lastPosition.lng], zoomLevels[currentZoomIndex], {
-                    animate: false
-                });
+            // Rotate the plane icon
+            const planeElement = document.getElementById('planeMarker');
+            if (planeElement) {
+                planeElement.style.transform = `rotate(${currentHeading}deg)`;
             }
         }
-
+        
+        const routeCoords = route.map(p => [p.lat, p.lng]);
+        routeLine.setLatLngs(routeCoords);
+        map.setView([lastPosition.lat, lastPosition.lng], zoomLevels[currentZoomIndex], {
+            animate: false
+        });
+    }
+}
 
         function calculateBearing(pos1, pos2) {
             const lat1 = pos1.lat * Math.PI / 180;
@@ -500,7 +525,6 @@
             return (bearing + 360) % 360;
         }
 
-
         function updateInfoBar() {
             if (!tracking || !lastPosition) return;
             
@@ -509,9 +533,8 @@
             document.getElementById('groundSpeed').textContent = speed + ' mph';
             
             if (route.length >= 2) {
-                const bearing = calculateBearing(route[route.length - 2], route[route.length - 1]);
-                document.getElementById('heading').textContent = Math.round(bearing) + '°';
-            }
+    document.getElementById('heading').textContent = Math.round(currentHeading) + '°';  // USE currentHeading instead of calculating
+}
             
             if (departureTime) {
                 const elapsed = Math.floor((Date.now() - departureTime) / 1000);
@@ -547,23 +570,19 @@
             }
         }
 
-
         function updateStats(pos) {
-            const distance = (route.length * 0.031).toFixed(2); // Convert to miles
-            const speed = (pos.speed * 2.237).toFixed(0); // Convert to mph
-            
-            document.getElementById('distance').textContent = distance + ' mi';
-            document.getElementById('speed').textContent = speed + ' mph';
-            document.getElementById('waypoints').textContent = route.length;
-        }
-
+    const speed = (pos.speed * 2.237).toFixed(0);
+    
+    document.getElementById('distance').textContent = totalDistance.toFixed(2) + ' mi';
+    document.getElementById('speed').textContent = speed + ' mph';
+    document.getElementById('waypoints').textContent = route.length;
+}
 
         function showError(message) {
             const errorEl = document.getElementById('errorMessage');
             errorEl.textContent = message;
             errorEl.classList.remove('hidden');
         }
-
 
         function openSettings(flightId = null) {
             if (flightId) {
@@ -587,11 +606,9 @@
             document.getElementById('settingsModal').classList.remove('hidden');
         }
 
-
         function closeSettings() {
             document.getElementById('settingsModal').classList.add('hidden');
         }
-
 
         function saveFlight() {
             const flightData = {
@@ -614,7 +631,6 @@
             closeSettings();
             renderFlightList();
         }
-
 
         function renderFlightList() {
             const listEl = document.getElementById('flightList');
@@ -650,7 +666,6 @@
             }).join('');
         }
 
-
         function selectFlight(id) {
             activeFlight = flights.find(f => f.id === id);
             if (!activeFlight) return;
@@ -662,9 +677,9 @@
             updateDisplay();
         }
 
-
         // Initialize
         renderFlightList();
     </script>
 </body>
 </html>
+
