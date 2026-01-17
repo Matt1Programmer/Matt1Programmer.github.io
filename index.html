@@ -45,22 +45,24 @@
     display: none !important;
 }
 
-/* Fullscreen map mode */
+/* Fullscreen layout fix */
 .fullscreen-map {
-    position: fixed;
-    inset: 0;
-    z-index: 9999;
-    border-radius: 0 !important;
+    display: flex;
+    flex-direction: column;
 }
 
-/* Hide everything else when fullscreen */
-body.fullscreen-active .hide-on-fullscreen {
-    display: none !important;
+.fullscreen-map .info-bar {
+    flex: 0 0 auto;
 }
 
-/* Make map fill screen minus info bar */
+.fullscreen-map .map-container {
+    flex: 1 1 auto;
+    height: 100%;
+}
+
 .fullscreen-map #map {
-    height: calc(100vh - 64px);
+    height: 100%;
+    width: 100%;
 }
     </style>
 </head>
@@ -189,7 +191,7 @@ body.fullscreen-active .hide-on-fullscreen {
                 
                 <!-- Map Container -->
                 <div class="relative">
-                    <div class="bg-slate-900/80 aspect-video relative overflow-hidden">
+                    <div class="bg-slate-900/80 relative overflow-hidden map-container">
                         <div id="mapPlaceholder" class="absolute inset-0 flex items-center justify-center text-center text-blue-300 z-10 bg-slate-900/80">
                             <div>
                                 <svg class="w-16 h-16 mx-auto mb-4 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
