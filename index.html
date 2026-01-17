@@ -54,8 +54,8 @@
 }
 
 /* Hide everything else when fullscreen */
-body.fullscreen-active > div:not(#mapFullscreenWrapper) {
-    display: none;
+body.fullscreen-active .hide-on-fullscreen {
+    display: none !important;
 }
 
 /* Make map fill screen minus info bar */
@@ -65,7 +65,7 @@ body.fullscreen-active > div:not(#mapFullscreenWrapper) {
     </style>
 </head>
 <body class="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 text-white overflow-y-auto">   
- <div class="max-w-4xl mx-auto p-4">
+<div class="max-w-4xl mx-auto p-4 hide-on-fullscreen">
         <!-- Header -->
         <div class="text-center mb-8 pt-6 relative">
             <div class="flex items-center justify-center gap-3 mb-2">
