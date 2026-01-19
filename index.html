@@ -6,7 +6,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Bike Airways">
-    <title>Bike Airways - Flight Tracker</title>
+    <title>Flight Tracker</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
@@ -112,11 +112,11 @@ body.fullscreen-active > div:not(#mapFullscreenWrapper) {
                             <div class="text-xl font-mono text-blue-300" id="departureTime">--:--</div>
                         </div>
                         
-                        <div class="px-8">
-                            <svg class="w-12 h-12 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
-                            </svg>
-                        </div>
+                        //<div class="px-8">
+                            //<svg class="w-12 h-12 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                //<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                            //</svg>
+                        //</div>
                         
                         <div class="flex-1 text-right">
                             <div class="text-4xl font-bold mb-1" id="arrivalLocation">DESTINATION</div>
@@ -529,30 +529,30 @@ body.fullscreen-active > div:not(#mapFullscreenWrapper) {
         }
 
         function updateMap(pos) {
-    lastPosition = pos;
+    		lastPosition = pos;
     
-    if (marker && map) {
-        marker.setLatLng([pos.lat, pos.lng]);
+    		if (marker && map) {
+        		marker.setLatLng([pos.lat, pos.lng]);
         
-        // Calculate and update heading
-        if (route.length >= 2) {
-            const prevPos = route[route.length - 2];
-            currentHeading = calculateBearing(prevPos, pos);
+        		// Calculate and update heading
+        	if (route.length >= 2) {
+            	const prevPos = route[route.length - 2];
+            	currentHeading = calculateBearing(prevPos, pos);
             
-            // Rotate the plane icon
-            const planeElement = document.getElementById('planeMarker');
-            if (planeElement) {
-                planeElement.style.transform = `rotate(${currentHeading}deg)`;
-            }
-        }
+            	// Rotate the plane icon
+            	const planeElement = document.getElementById('planeMarker');
+            	if (planeElement) {
+                	planeElement.style.transform = `rotate(${currentHeading}deg)`;
+            		}
+        		}
         
-        const routeCoords = route.map(p => [p.lat, p.lng]);
-        routeLine.setLatLngs(routeCoords);
-        map.setView([lastPosition.lat, lastPosition.lng], zoomLevels[currentZoomIndex], {
-            animate: false
-        });
-    }
-}
+        		const routeCoords = route.map(p => [p.lat, p.lng]);
+        		routeLine.setLatLngs(routeCoords);
+        		map.setView([lastPosition.lat, lastPosition.lng], zoomLevels[currentZoomIndex], {
+            		animate: false
+        		});
+    		}
+		}
 
         function calculateBearing(pos1, pos2) {
             const lat1 = pos1.lat * Math.PI / 180;
@@ -723,4 +723,5 @@ body.fullscreen-active > div:not(#mapFullscreenWrapper) {
     </script>
 </body>
 </html>
+
 
