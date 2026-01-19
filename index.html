@@ -633,13 +633,33 @@ body.fullscreen-active > div:not(#mapFullscreenWrapper) {
                     document.getElementById('editArrivalTime').value = flight.arrival.time;
                 }
             } else {
-                document.getElementById('editFlightNumber').value = 'BA' + Math.floor(Math.random() * 9000 + 1000);
-                document.getElementById('editDepartureLocation').value = '';
-                document.getElementById('editArrivalLocation').value = '';
-                document.getElementById('editDepartureTime').value = '';
-                document.getElementById('editBoardingTime').value = '';
-                document.getElementById('editArrivalTime').value = '';
-            }
+    // Generate random flight number
+    document.getElementById('editFlightNumber').value = 'BA' + Math.floor(Math.random() * 9000 + 1000);
+    
+    // Clear locations
+    document.getElementById('editDepartureLocation').value = '';
+    document.getElementById('editArrivalLocation').value = '';
+    
+    // Set default times to now
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    
+    // Set departure to current time
+    const defaultDeparture = `${year}-${month}-${day}T${hours}:${minutes}`;
+    document.getElementById('editDepartureTime').value = defaultDeparture;
+    
+    // Set arrival to 1 hour later (same day)
+    const arrivalTime = new Date(now.getTime() + 60 * 60 * 1000);
+    const arrHours = String(arrivalTime.getHours()).padStart(2, '0');
+    const arrMinutes = String(arrivalTime.getMinutes()).padStart(2, '0');
+    const arrDay = String(arrivalTime.getDate()).padStart(2, '0');
+    const defaultArrival = `${year}-${month}-${arrDay}T${arrHours}:${arrMinutes}`;
+    document.getElementById('editArrivalTime').value = defaultArrival;
+}
             document.getElementById('settingsModal').classList.remove('hidden');
         }
 
@@ -719,6 +739,7 @@ body.fullscreen-active > div:not(#mapFullscreenWrapper) {
     </script>
 </body>
 </html>
+
 
 
 
