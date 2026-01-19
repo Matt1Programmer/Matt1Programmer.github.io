@@ -8,7 +8,7 @@
     <meta name="apple-mobile-web-app-title" content="Bike Airways">
     <title>Flight Tracker</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+    <link rel="stylesheet" href="https://}cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
     <style>
         body { margin: 0; padding: 0; }
@@ -642,15 +642,28 @@ body.fullscreen-active > div:not(#mapFullscreenWrapper) {
     
     // Set default times to now
     const now = new Date();
+	const nowminus5min = new Date(now.getTime() - 5 * 60 * 1000)
+	const nowplus5min = new Date(now.getTime() - 5 * 60 * 1000)
     const year = now.getFullYear();
     const month = String(now.getMonth() + 1).padStart(2, '0');
     const day = String(now.getDate()).padStart(2, '0');
     const hours = String(now.getHours()).padStart(2, '0');
     const minutes = String(now.getMinutes()).padStart(2, '0');
+
+	// Format it
+	const yeardiff = departure5MinLater.getFullYear();
+	const monthdiff = String(departure5MinLater.getMonth() + 1).padStart(2, '0');
+	const daydiff = String(departure5MinLater.getDate()).padStart(2, '0');
+	const hoursdiff = String(departure5MinLater.getHours()).padStart(2, '0');
+	const minutesdiff = String(departure5MinLater.getMinutes()).padStart(2, '0');
     
     // Set departure to current time
-    const defaultDeparture = `${year}-${month}-${day}T${hours}:${minutes}`;
+    const defaultDeparture = `${yeardiff}-${monthdiff}-${daydiff}T${hoursdiff}:${minutesdiff}`;
     document.getElementById('editDepartureTime').value = defaultDeparture;
+
+	// Set boarding to now
+	const defaultBoarding = `${year}-${month}-${day}T${hours}:${minutes}`;
+	document.getElementById('editBoardingTime').value = defaultBoarding;
     
     // Set arrival to 1 hour later (same day)
     const arrivalTime = new Date(now.getTime() + 60 * 60 * 1000);
@@ -739,6 +752,7 @@ body.fullscreen-active > div:not(#mapFullscreenWrapper) {
     </script>
 </body>
 </html>
+
 
 
 
