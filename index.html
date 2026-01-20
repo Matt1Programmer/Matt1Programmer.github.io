@@ -658,11 +658,11 @@ body.fullscreen-active > div:not(#mapFullscreenWrapper) {
 	const minutesdiff = String(departure5MinLater.getMinutes()).padStart(2, '0');
     
     // Set departure to current time
-    const defaultDeparture = `${yeardiff}-${monthdiff}-${daydiff}T${hoursdiff}:${minutesdiff}`;
+    const defaultDeparture = `${year}-${month}-${day}T${hours}:${minutes}`;
     document.getElementById('editDepartureTime').value = defaultDeparture;
 
 	// Set boarding to now
-	const defaultBoarding = `${year}-${month}-${day}T${hours}:${minutes}`;
+	const defaultBoarding = `${yeardiff}-${monthdiff}-${daydiff}T${hoursdiff}:${minutesdiff}`;
 	document.getElementById('editBoardingTime').value = defaultBoarding;
     
     // Set arrival to 1 hour later (same day)
@@ -752,6 +752,7 @@ body.fullscreen-active > div:not(#mapFullscreenWrapper) {
     </script>
 </body>
 </html>
+
 
 
 
