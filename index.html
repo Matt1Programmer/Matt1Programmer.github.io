@@ -643,7 +643,7 @@ body.fullscreen-active > div:not(#mapFullscreenWrapper) {
     // Set default times to now
     const now = new Date();
 	const nowminus5min = new Date(now.getTime() - 5 * 60 * 1000)
-	const nowplus5min = new Date(now.getTime() - 5 * 60 * 1000)
+	const departure5MinLater = new Date(now.getTime() - 5 * 60 * 1000)
     const year = now.getFullYear();
     const month = String(now.getMonth() + 1).padStart(2, '0');
     const day = String(now.getDate()).padStart(2, '0');
@@ -752,6 +752,7 @@ body.fullscreen-active > div:not(#mapFullscreenWrapper) {
     </script>
 </body>
 </html>
+
 
 
 
