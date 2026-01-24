@@ -281,6 +281,73 @@ body.fullscreen-active > div:not(#mapFullscreenWrapper) {
         let flights = [];
         let activeFlight = null;
 
+		// Define map overlays/shapes
+		const mapOverlays = [
+    	{
+        	type: 'polygon',  // or 'rectangle', 'circle', 'polyline'
+        	coordinates: [
+            	[28.606389, -81.196389],  // lat, lng pairs
+            	[28.5390, -81.3785],
+            	[28.5395, -81.3795],
+            	[28.5388, -81.3800]
+        	],
+        	color: '#ff0000',        // Shape color
+        	fillOpacity: 0.3,        // Transparency (0-1)
+        	weight: 2,               // Border thickness
+        	label: 'Restricted Zone',
+        	labelSize: '14px',
+        	labelColor: '#ffffff',
+        	labelFont: 'Arial',
+        	labelOpacity: 1.0
+    	},
+    	{
+        	type: 'circle',
+        	coordinates: [28.5400, -81.3750],  // center point [lat, lng]
+        	radius: 500,  // meters
+        	color: '#00ff00',
+        	fillOpacity: 0.2,
+        	weight: 3,
+        	label: 'Safe Zone',
+        	labelSize: '16px',
+        	labelColor: '#00ff00',
+        	labelFont: 'Courier New',
+        	labelOpacity: 0.8
+    	},
+    	{
+    	    type: 'rectangle',
+        	coordinates: [
+            	[28.5350, -81.3850],  // southwest corner
+            	[28.5370, -81.3820]   // northeast corner
+        	],
+        	color: '#0000ff',
+        	fillOpacity: 0.4,
+        	weight: 2,
+        	label: 'Building',
+        	labelSize: '12px',
+        	labelColor: '#ffffff',
+        	labelFont: 'Arial',
+        	labelOpacity: 1.0
+    	},
+    	{
+        	type: 'polyline',  // Just a line, no fill
+        	coordinates: [
+            	[28.5300, -81.3900],
+            	[28.5320, -81.3880],
+            	[28.5340, -81.3890]
+        	],
+        	color: '#ffff00',
+        	fillOpacity: 0,  // No fill for lines
+        	weight: 4,
+        	label: 'Route Path',
+        	labelSize: '14px',
+        	labelColor: '#ffff00',
+        	labelFont: 'Arial',
+	        labelOpacity: 1.0
+    	}
+	];
+
+	let overlayLayers = [];  // Store references to shapes
+
        function toggleFullscreenMap() {
     const wrapper = document.getElementById('mapFullscreenWrapper');
     const body = document.body;
@@ -328,8 +395,88 @@ body.fullscreen-active > div:not(#mapFullscreenWrapper) {
 
                 marker = L.marker([lat, lng], { icon: planeIcon }).addTo(map);
                 routeLine = L.polyline([], { color: '#540000', weight: 6, opacity: 0.8 }).addTo(map);
+
+				// Add custom overlays
+                addMapOverlays();  // ADD THIS LINE
             }
         }
+
+	function addMapOverlays() {
+    if (!map) return;
+    
+    mapOverlays.forEach(overlay => {
+        let shape;
+        
+        switch(overlay.type) {
+            case 'polygon':
+                shape = L.polygon(overlay.coordinates, {
+                    color: overlay.color,
+                    fillColor: overlay.color,
+                    fillOpacity: overlay.fillOpacity,
+                    weight: overlay.weight
+                }).addTo(map);
+                break;
+                
+            case 'rectangle':
+                shape = L.rectangle(overlay.coordinates, {
+                    color: overlay.color,
+                    fillColor: overlay.color,
+                    fillOpacity: overlay.fillOpacity,
+                    weight: overlay.weight
+                }).addTo(map);
+                break;
+                
+            case 'circle':
+                shape = L.circle(overlay.coordinates, {
+                    radius: overlay.radius,
+                    color: overlay.color,
+                    fillColor: overlay.color,
+                    fillOpacity: overlay.fillOpacity,
+                    weight: overlay.weight
+                }).addTo(map);
+                break;
+                
+            case 'polyline':
+                shape = L.polyline(overlay.coordinates, {
+                    color: overlay.color,
+                    weight: overlay.weight,
+                    opacity: overlay.fillOpacity
+                }).addTo(map);
+                break;
+        }
+        
+        // Add label if specified
+        if (overlay.label && shape) {
+            const bounds = shape.getBounds();
+            const center = bounds.getCenter();
+            
+            const labelIcon = L.divIcon({
+                className: 'custom-label',
+                html: `<div style="
+                    font-size: ${overlay.labelSize};
+                    color: ${overlay.labelColor};
+                    font-family: ${overlay.labelFont};
+                    opacity: ${overlay.labelOpacity};
+                    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+                    font-weight: bold;
+                    white-space: nowrap;
+                    pointer-events: none;
+                ">${overlay.label}</div>`,
+                iconSize: null,
+                iconAnchor: [0, 0]
+            });
+            
+            const label = L.marker(center, { 
+                icon: labelIcon,
+                interactive: false
+            }).addTo(map);
+            
+            overlayLayers.push(shape, label);
+        } else {
+            overlayLayers.push(shape);
+        }
+    });
+}
 
         function cycleZoom() {
             currentZoomIndex = (currentZoomIndex + 1) % zoomLevels.length;
@@ -510,9 +657,13 @@ body.fullscreen-active > div:not(#mapFullscreenWrapper) {
             departureTime = null;
             lastPosition = null;
             currentZoomIndex = 0;
-	totalDistance = 0;  // ADD THIS LINE
-            
-            if (map) {
+			totalDistance = 0;  // ADD THIS LINE
+
+			if (map) {
+                // Remove all overlay shapes
+                overlayLayers.forEach(layer => map.removeLayer(layer));
+                overlayLayers = [];
+                
                 map.remove();
                 map = null;
                 marker = null;
@@ -752,6 +903,7 @@ body.fullscreen-active > div:not(#mapFullscreenWrapper) {
     </script>
 </body>
 </html>
+
 
 
 
