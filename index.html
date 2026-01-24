@@ -468,37 +468,63 @@ body.fullscreen-active > div:not(#mapFullscreenWrapper) {
         }
         
         // Add label if specified
-        if (overlay.label && shape) {
-            const bounds = shape.getBounds();
-            const center = bounds.getCenter();
-            
-            const labelIcon = L.divIcon({
-    className: 'custom-label',
-    html: `<div style="
-        font-size: ${overlay.labelSize};
-        color: ${overlay.labelColor};
-        font-family: ${overlay.labelFont};
-        opacity: ${overlay.labelOpacity};
-        text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
-        font-weight: bold;
-        white-space: nowrap;
-        pointer-events: none;
-        text-align: center;
-        transform: translate(-50%, -50%);
-    ">${overlay.label}</div>`,
-    iconSize: null,
-    iconAnchor: [0, 0]
-});
-            
-            const label = L.marker(center, { 
-                icon: labelIcon,
-                interactive: false
-            }).addTo(map);
-            
-            overlayLayers.push(shape, label);
+if (overlay.label && shape) {
+    const bounds = shape.getBounds();
+    const center = bounds.getCenter();
+    
+    // Create initial label
+    const createLabel = (zoomLevel) => {
+        // Base size from overlay settings (e.g., '14px')
+        const baseSize = parseInt(overlay.labelSize);
+        
+        // Calculate size based on zoom (zoom 8 = overview = full size)
+        // Smaller zoom = smaller text
+        let scaleFactor;
+        if (zoomLevel >= 8) {
+            scaleFactor = 1.0; // Full size at overview and closer
+        } else if (zoomLevel >= 6) {
+            scaleFactor = 0.7;
+        } else if (zoomLevel >= 4) {
+            scaleFactor = 0.5;
         } else {
-            overlayLayers.push(shape);
+            scaleFactor = 0.3;
         }
+        
+        const adjustedSize = Math.max(8, baseSize * scaleFactor); // Minimum 8px
+        
+        return L.divIcon({
+            className: 'custom-label',
+            html: `<div style="
+                font-size: ${adjustedSize}px;
+                color: ${overlay.labelColor};
+                font-family: ${overlay.labelFont};
+                opacity: ${overlay.labelOpacity};
+                text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+                font-weight: bold;
+                white-space: nowrap;
+                pointer-events: none;
+                text-align: center;
+                transform: translate(-50%, -50%);
+            ">${overlay.label}</div>`,
+            iconSize: null,
+            iconAnchor: [0, 0]
+        });
+    };
+    
+    const label = L.marker(center, { 
+        icon: createLabel(map.getZoom()),
+        interactive: false
+    }).addTo(map);
+    
+    // Update label size when zoom changes
+    map.on('zoomend', function() {
+        label.setIcon(createLabel(map.getZoom()));
+    });
+    
+    overlayLayers.push(shape, label);
+} else {
+    overlayLayers.push(shape);
+}
     });
 }
 
@@ -927,6 +953,7 @@ body.fullscreen-active > div:not(#mapFullscreenWrapper) {
     </script>
 </body>
 </html>
+
 
 
 
