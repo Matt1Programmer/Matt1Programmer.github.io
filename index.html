@@ -473,20 +473,22 @@ body.fullscreen-active > div:not(#mapFullscreenWrapper) {
             const center = bounds.getCenter();
             
             const labelIcon = L.divIcon({
-                className: 'custom-label',
-                html: `<div style="
-                    font-size: ${overlay.labelSize};
-                    color: ${overlay.labelColor};
-                    font-family: ${overlay.labelFont};
-                    opacity: ${overlay.labelOpacity};
-                    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
-                    font-weight: bold;
-                    white-space: nowrap;
-                    pointer-events: none;
-                ">${overlay.label}</div>`,
-                iconSize: null,
-                iconAnchor: [0, 0]
-            });
+    className: 'custom-label',
+    html: `<div style="
+        font-size: ${overlay.labelSize};
+        color: ${overlay.labelColor};
+        font-family: ${overlay.labelFont};
+        opacity: ${overlay.labelOpacity};
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+        font-weight: bold;
+        white-space: nowrap;
+        pointer-events: none;
+        text-align: center;
+        transform: translate(-50%, -50%);
+    ">${overlay.label}</div>`,
+    iconSize: null,
+    iconAnchor: [0, 0]
+});
             
             const label = L.marker(center, { 
                 icon: labelIcon,
@@ -925,6 +927,7 @@ body.fullscreen-active > div:not(#mapFullscreenWrapper) {
     </script>
 </body>
 </html>
+
 
 
 
