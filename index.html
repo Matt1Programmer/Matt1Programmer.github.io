@@ -287,9 +287,9 @@ body.fullscreen-active > div:not(#mapFullscreenWrapper) {
         	type: 'polygon',  // or 'rectangle', 'circle', 'polyline'
         	coordinates: [
             	[28.606389, -81.196389],  // lat, lng pairs
-            	[28.5390, -81.3785],
-            	[28.5395, -81.3795],
-            	[28.5388, -81.3800]
+            	[28.606944, -81.195556],
+            	[28.605556, -81.195833],
+            	[28.604444, -81.199167]
         	],
         	color: '#ff0000',        // Shape color
         	fillOpacity: 0.3,        // Transparency (0-1)
@@ -299,51 +299,8 @@ body.fullscreen-active > div:not(#mapFullscreenWrapper) {
         	labelColor: '#ffffff',
         	labelFont: 'Arial',
         	labelOpacity: 1.0
-    	},
-    	{
-        	type: 'circle',
-        	coordinates: [28.5400, -81.3750],  // center point [lat, lng]
-        	radius: 500,  // meters
-        	color: '#00ff00',
-        	fillOpacity: 0.2,
-        	weight: 3,
-        	label: 'Safe Zone',
-        	labelSize: '16px',
-        	labelColor: '#00ff00',
-        	labelFont: 'Courier New',
-        	labelOpacity: 0.8
-    	},
-    	{
-    	    type: 'rectangle',
-        	coordinates: [
-            	[28.5350, -81.3850],  // southwest corner
-            	[28.5370, -81.3820]   // northeast corner
-        	],
-        	color: '#0000ff',
-        	fillOpacity: 0.4,
-        	weight: 2,
-        	label: 'Building',
-        	labelSize: '12px',
-        	labelColor: '#ffffff',
-        	labelFont: 'Arial',
-        	labelOpacity: 1.0
-    	},
-    	{
-        	type: 'polyline',  // Just a line, no fill
-        	coordinates: [
-            	[28.5300, -81.3900],
-            	[28.5320, -81.3880],
-            	[28.5340, -81.3890]
-        	],
-        	color: '#ffff00',
-        	fillOpacity: 0,  // No fill for lines
-        	weight: 4,
-        	label: 'Route Path',
-        	labelSize: '14px',
-        	labelColor: '#ffff00',
-        	labelFont: 'Arial',
-	        labelOpacity: 1.0
     	}
+    	
 	];
 
 	let overlayLayers = [];  // Store references to shapes
@@ -903,6 +860,7 @@ body.fullscreen-active > div:not(#mapFullscreenWrapper) {
     </script>
 </body>
 </html>
+
 
 
 
